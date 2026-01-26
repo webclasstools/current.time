@@ -1,5 +1,7 @@
 ## [current.time](https://clocktimenow.github.io/current.time/)
- 
+
+###### You're on the updated repository!
+
 > [!IMPORTANT]
 > It is heavily important to understand that this project comes from a ***solo developer***. I will usually work on this project from random times, but it depends if i have free time or not.
 > 
@@ -25,3 +27,4 @@ A clock website which of course, displays the current time.
 We haven't made the *documents section* yet, as this project is **<u>still in beta.</u>** Anything can change, so features are not final. Check back soon, or [check commits for changelogs](https://github.com/clocktimenow/current.time/commits/main/). Thanks for the patience!
 
 <hr>
+
