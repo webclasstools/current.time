@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Loading...</title>
-  <link id="favicon" rel="icon" type="image/png" href="timenow/imgs/default.png">  
+  <link id="favicon" rel="icon" type="image/png" href="timenow/imgs/default.png">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -21,6 +22,14 @@
       overflow: hidden;
     }
 
+    .sidebar,
+    .sidebar input,
+    .sidebar select,
+    .sidebar label,
+    .sidebar h3 {
+      font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
     .sidebar {
       width: 250px;
       background: rgba(255, 255, 255, 0.95);
@@ -31,7 +40,7 @@
       top: 0;
       bottom: 0;
       z-index: 1000;
-      font-size: 16px;
+      font-size: 18px;
       transition: transform 0.3s ease, background 0.3s, color 0.3s;
       transform: translateX(-100%);
     }
@@ -40,11 +49,22 @@
       transform: translateX(0);
     }
 
-
     .sidebar input, .sidebar select {
       margin-right: 10px;
       margin-bottom: 10px;
     }
+
+    .sidebar input[type="checkbox"] {
+      transform: scale(1.3);
+      margin-right: 8px;
+      cursor: pointer;
+    }
+
+    .sidebar h3 {
+      font-size: 1.25em;
+      margin-bottom: 12px;
+    }
+
 
     .dark-mode .sidebar {
       background: rgba(30, 30, 30, 0.95);
@@ -78,7 +98,7 @@
     }
 
     #date {
-      font-size: 1.5vw;
+      font-size: clamp(16px, 1.9vw, 28px);
       font-weight: 300;
       margin-top: 20px;
     }
@@ -234,20 +254,57 @@
     body.hide-cursor {
       cursor: none !important;
     }
-
-  @font-face {
-    /* Site-wide font */
+  /*Montserrat*/
+  @font-face { 
+    /* Date face font (below time) */
     font-family: 'Montserrat';
     src: url('./fonts/Montserrat-SemiBold.ttf') format('truetype');
     font-weight: 600;
   }
 
   @font-face {
-    /* Clock face font */
+    /* Time face font */
     font-family: 'Montserrat';
     src: url('./fonts/Montserrat-ExtraBold.ttf') format('truetype');
     font-weight: 700;
-  }  
+  }
+
+  /*D-Din*/
+  @font-face {
+    font-family: 'DDin';
+    src: url('.fonts/DDin-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+  }
+
+  @font-face {
+    font-family: 'DDin';
+    src: url('./fonts/DDin-ExtraBold.ttf') format('truetype');
+    font-weight: 700;
+  }
+
+  /* Source Sans Pro */
+  @font-face {
+    font-family: 'SourceSans3';
+    src: url('./fonts/SourceSans3-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+  }
+  @font-face {
+    font-family: 'SourceSans3';
+    src: url('./fonts/SourceSans3-ExtraBold.ttf') format('truetype');
+    font-weight: 700;
+  }
+
+  /* Inconsolata */
+  @font-face {
+    font-family: 'Inconsolata';
+    src: url('./fonts/Inconsolata-SemiBold.ttf') format('truetype'); /* for 600 weight */
+    font-weight: 600;
+  }
+  @font-face {
+    font-family: 'Inconsolata';
+    src: url('./fonts/Inconsolata-ExtraBold.ttf') format('truetype'); /* for 700 weight */
+    font-weight: 700;
+  }
   </style>
 </head>
 <body>
@@ -269,6 +326,16 @@
         <option value ="1.75">1.75x</option>
         <option value="2">2x</option>
 
+      </select>
+    </label>
+    <br>
+    <label>
+      Clock Font:
+      <select id="clockFontSelect">
+        <option value="Montserrat">Montserrat</option>
+        <option value="DDIN">D-DIN</option>
+        <option value="SourceSans3">Source Sans Pro</option>
+        <option value="Inconsolata">Inconsolata</option>
       </select>
     </label>
     <br>
@@ -302,6 +369,8 @@
 
     const buildInput = document.getElementById('buildInput');
     const loadBuildBtn = document.getElementById('loadBuildBtn');
+
+    const clockFontSelect = document.getElementById('clockFontSelect');
 
     let is12Hour = false;
     let showMilliseconds = false;
@@ -570,6 +639,12 @@
     document.addEventListener('mousemove', resetCursorTimer);
     document.addEventListener('mousedown', resetCursorTimer);
     document.addEventListener('keydown', resetCursorTimer);
+
+    clockFontSelect.addEventListener('change', () => {
+      const selectedFont = clockFontSelect.value;
+      timeEl.style.fontFamily = selectedFont; // 700 weight
+      dateEl.style.fontFamily = selectedFont; // 600 weight
+    });
 
     resetButtonTimer();
     resetCursorTimer();
