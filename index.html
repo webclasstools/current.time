@@ -208,6 +208,32 @@
       transition: opacity 0.5s ease, background 0.3s, color 0.3s;
     }
 
+    #privacyBanner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(252, 114, 114, 0.65);
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+      padding: 10px 16px;
+      z-index: 1200;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    #privacyBanner .banner-main {
+      color: #000;
+      font-size: 14px;
+    }
+
+    #privacyBanner .banner-sub {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #1a1a1a;
+      opacity: 0.6;
+    }
+
     #buildInput {
       padding: 5px 8px;
       font-size: 14px;
@@ -272,13 +298,13 @@
   /*D-Din*/
   @font-face {
     font-family: 'DDin';
-    src: url('.fonts/DDin-SemiBold.ttf') format('truetype');
+    src: url('.fonts/DDin-SemiBold.otf') format('opentype');
     font-weight: 600;
   }
 
   @font-face {
     font-family: 'DDin';
-    src: url('./fonts/DDin-ExtraBold.ttf') format('truetype');
+    src: url('./fonts/DDin-ExtraBold.otf') format('opentype');
     font-weight: 700;
   }
 
@@ -308,6 +334,16 @@
   </style>
 </head>
 <body>
+  <div id="privacyBanner">
+    <div class="banner-main">
+      This website uses your data solely for counting website traffic data.
+      <strong>No personal data is collected.</strong>
+    </div>
+    <div class="banner-sub" id="bannerCountdown">
+      This banner will auto hide in 10s. Click on the banner to hide it manually.
+    </div>
+  </div>
+
   <button id="exitFullscreenBtn" title="Exit Fullscreen">&times;</button>
   <button id="fullscreenBtn" title="Fullscreen">&#x26F6;</button>
 
@@ -646,6 +682,36 @@
       dateEl.style.fontFamily = selectedFont; // 600 weight
     });
 
+    (function () {
+      const banner = document.getElementById('privacyBanner');
+      const countdownEl = document.getElementById('bannerCountdown');
+      if (!banner || !countdownEl) return;
+    
+      let seconds = 10;
+      countdownEl.textContent =
+        `This banner will auto hide in ${seconds}s. Click on the banner to hide it manually.`;
+    
+      const interval = setInterval(() => {
+        seconds--;
+        if (seconds <= 0) {
+          clearInterval(interval);
+        } else {
+          countdownEl.textContent =
+            `This banner will auto hide in ${seconds}s. Click on the banner to hide it manually.`;
+        }
+      }, 1000);
+    
+      function removeBanner() {
+        clearInterval(interval);
+        banner.style.transition = 'opacity 0.3s ease';
+        banner.style.opacity = '0';
+        setTimeout(() => banner.remove(), 300);
+      }
+    
+      banner.addEventListener('click', removeBanner);
+      setTimeout(removeBanner, 10000);
+    })();
+    
     resetButtonTimer();
     resetCursorTimer();
     
@@ -659,8 +725,3 @@
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "a4725cc1c1db4e859650a1e8a4a1a4a2"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
-
-
-
-
-
