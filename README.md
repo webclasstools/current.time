@@ -24,7 +24,8 @@ A clock website which of course, displays the current time.
 ## <p align="center">404 Not Found</p>
 ###### <p align="center">Couldn't seem to find it here...</p>
 
-We haven't made the *documents section* yet, as this project is **<u>still in beta.</u>** Anything can change, so features are not final. Check back soon, or [check commits for changelogs](https://github.com/clocktimenow/current.time/commits/main/). Thanks for the patience!
+We haven't made the *documents section* yet, as this project is **<u>still in beta.</u>** Anything can change, so features are not final. Check back soon, or [check commits for changelogs](https://github.com/webclasstools/current.time/commits/main/). Thanks for the patience!
 
 <hr>
+
 
