@@ -10,7 +10,7 @@
 > [!WARNING]
 > The [Github Pages](https://clocktimenow.github.io/current.time/) website is in ***public testing***. <ins>All changes are expected to be unconfirmed and be rolled back.</ins>
 >
-> **All fonts used are free to use without a license** ***(based on research).***
+> **All fonts used are free to use without a license** ***(based on research).*** This service also uses [***Cloudflare Web Analytics***](https://www.cloudflare.com/web-analytics/), but no sensitive data is collected or saved.
 
 Latest Version - **`Still in test builds!`**
 
@@ -27,5 +27,6 @@ A clock website which of course, displays the current time.
 We haven't made the *documents section* yet, as this project is **<u>still in beta.</u>** Anything can change, so features are not final. Check back soon, or [check commits for changelogs](https://github.com/webclasstools/current.time/commits/main/). Thanks for the patience!
 
 <hr>
+
 
 
