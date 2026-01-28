@@ -5,7 +5,7 @@
   <title>Loading...</title>
   <link id="favicon" rel="icon" type="image/png" href="timenow/imgs/default.png">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <style>
+  <style> /* CSS start */
     * {
       box-sizing: border-box;
     }
@@ -333,7 +333,7 @@
   }
   </style>
 </head>
-<body>
+<body> <!-- Website contents start -->
   <div id="privacyBanner">
     <div class="banner-main">
       This website uses your data solely for counting website traffic data.
@@ -387,7 +387,7 @@
     <div id="date">Loading date...</div>
   </div>
 
-  <script> // Javascript goes here...
+  <script> // JS start
     const timeEl = document.getElementById('time');
     const msEl = document.getElementById('milliseconds');
     const dateEl = document.getElementById('date');
@@ -408,6 +408,19 @@
 
     const clockFontSelect = document.getElementById('clockFontSelect');
 
+    const LOCK_FLAG_KEY = "clock_lock_mode";
+
+    const LOCK_CODE_HASH = "cda5279fda";
+
+    const UNLOCK_CODE_HASHES = [
+      "ef7fef",
+      "c21912",
+      "f9c667",
+      "e645c5",
+      "d13f2c",
+      "a41dd3"
+    ];
+
     let is12Hour = false;
     let showMilliseconds = false;
     let darkMode = false;
@@ -423,6 +436,7 @@
     let cursorTimeout;
     let cursorHidden = false;
 
+    let lockModeEnabled = false;
 
     function updateClock() {
       const now = new Date();
@@ -448,6 +462,103 @@
     
       const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
       dateEl.textContent = now.toLocaleDateString(undefined, options);
+    }
+
+    if (localStorage.getItem(LOCK_FLAG_KEY) === "true") {
+        lockModeEnabled = true;
+        loadSettings();
+
+        toggleBtn.style.display = "none";
+        sidebar.classList.remove("open");
+      }
+
+  function disableLockMode() {
+    lockModeEnabled = false;
+    localStorage.removeItem(LOCK_FLAG_KEY);
+    localStorage.removeItem("clock_settings");
+
+    toggleBtn.style.display = "block";
+
+    console.log("lock mode set to false");
+  }
+
+  function promptLockCode() {
+      const input = prompt("Enter lock code (10 hex characters):");
+      if (!input) return;
+
+      const code = input.toLowerCase();
+
+      if (!/^[0-9a-f]{10}$/.test(code)) return;
+
+      if (code === LOCK_CODE_HASH) {
+        enableLockMode();
+      }
+    }
+
+    function promptUnlockCode() {
+      const input = prompt("Enter unlock code (6 hex characters):");
+      if (!input) return;
+
+      const code = input.toLowerCase();
+
+      if (!/^[0-9a-f]{6}$/.test(code)) return;
+
+      if (UNLOCK_CODE_HASHES.includes(code)) {
+        disableLockMode();
+      }
+    }
+
+    function enableLockMode() {
+      lockModeEnabled = true;
+      localStorage.setItem(LOCK_FLAG_KEY, "true");
+
+      sidebar.classList.remove("open");
+      toggleBtn.style.display = "none";
+
+      saveSettings(); // save current settings at the moment lock mode is enabled
+    }
+
+
+    function saveSettings() {
+        if (!lockModeEnabled) return; // only save if lock mode is on
+
+        const settings = {
+          is12Hour: is12Hour,
+          darkMode: darkMode,
+          showMilliseconds: showMilliseconds,
+          zoomLevel: zoomLevel,
+          clockFont: clockFontSelect.value
+        };
+
+        localStorage.setItem("clock_settings", JSON.stringify(settings));
+      }
+
+  function loadSettings() {
+      if (!lockModeEnabled) return;
+
+      const saved = localStorage.getItem("clock_settings");
+      if (!saved) return;
+
+      const settings = JSON.parse(saved);
+
+      // Apply settings
+      is12Hour = settings.is12Hour ?? is12Hour;
+      darkMode = settings.darkMode ?? darkMode;
+      showMilliseconds = settings.showMilliseconds ?? showMilliseconds;
+      zoomLevel = settings.zoomLevel ?? zoomLevel;
+      const clockFont = settings.clockFont ?? "Montserrat";
+
+      // Apply to DOM
+      formatToggle.checked = is12Hour;
+      darkModeToggle.checked = darkMode;
+      msToggle.checked = showMilliseconds;
+      zoomSelect.value = zoomLevel;
+      clockFontSelect.value = clockFont;
+
+      document.body.classList.toggle('dark-mode', darkMode);
+      clockContainer.style.transform = `scale(${zoomLevel})`;
+      timeEl.style.fontFamily = clockFont;
+      dateEl.style.fontFamily = clockFont;
     }
 
     function resetCursorTimer() {
@@ -497,10 +608,10 @@
       if (buildName === 'production') {
         if (!window.location.href.endsWith('index.html') &&
             !window.location.href.endsWith('/')) {
-          window.location.href = 'https://clocktimenow.github.io/current.time';
+          window.location.href = 'https://webclasstools.github.io/current.time';
         }
       } else if (buildName === 'publictesting') {
-        window.location.href = 'https://clocktimenow.github.io/current.time/extrabuilds/404.html';
+        window.location.href = 'https://webclasstools.github.io/current.time/extrabuilds/404.html';
       } else {
         alert('Unknown build! Enter a valid production build.');
       }
@@ -660,6 +771,18 @@
 
     document.addEventListener('mousemove', showExitButton);
 
+    document.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.shiftKey && e.code === "KeyL") {
+          e.preventDefault();
+
+          if (!lockModeEnabled) {
+            promptLockCode();
+          } else {
+            promptUnlockCode();
+          }
+        }
+      });
+
     exitBtn.addEventListener('click', () => {
       document.exitFullscreen();
     });
@@ -675,6 +798,35 @@
     document.addEventListener('mousemove', resetCursorTimer);
     document.addEventListener('mousedown', resetCursorTimer);
     document.addEventListener('keydown', resetCursorTimer);
+    
+    formatToggle.addEventListener('change', () => {
+      is12Hour = formatToggle.checked;
+      saveSettings();
+    });
+
+    darkModeToggle.addEventListener('change', () => {
+      darkMode = darkModeToggle.checked;
+      document.body.classList.toggle('dark-mode', darkMode);
+      saveSettings();
+    });
+
+    msToggle.addEventListener('change', () => {
+      showMilliseconds = msToggle.checked;
+      saveSettings();
+    });
+
+    zoomSelect.addEventListener('change', () => {
+      zoomLevel = parseFloat(zoomSelect.value);
+      clockContainer.style.transform = `scale(${zoomLevel})`;
+      saveSettings();
+    });
+
+    clockFontSelect.addEventListener('change', () => {
+      const selectedFont = clockFontSelect.value;
+      timeEl.style.fontFamily = selectedFont;
+      dateEl.style.fontFamily = selectedFont;
+      saveSettings();
+    });
 
     clockFontSelect.addEventListener('change', () => {
       const selectedFont = clockFontSelect.value;
