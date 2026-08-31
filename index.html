@@ -93,7 +93,8 @@
     #milliseconds {
       font-size: 2vw;
       font-weight: 300;
-      margin-top: 10px;
+      margin-top: 10px;
+
       display: none;
     }
 
@@ -483,7 +484,7 @@
   }
 
   function promptLockCode() {
-      const input = prompt("Enter lock code (10 hex characters):");
+      const input = prompt("Enter lock code (10 characters):");
       if (!input) return;
 
       const code = input.toLowerCase();
@@ -496,7 +497,7 @@
     }
 
     function promptUnlockCode() {
-      const input = prompt("Enter unlock code (6 hex characters):");
+      const input = prompt("Enter unlock code (6 characters):");
       if (!input) return;
 
       const code = input.toLowerCase();
